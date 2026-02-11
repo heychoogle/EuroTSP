@@ -1,0 +1,48 @@
+from tsp_optimiser import main as run_tsp
+from date_scheduler import schedule_itinerary, get_bookable_itinerary
+from parse_itinerary import print_pretty_itinerary
+import json
+import uuid
+
+
+# # can be all available cities, or a subset of available cities.
+# selected_cities = [
+#     "London",
+#     "Lisbon", 
+#     "Rome",
+#     "Budapest",
+#     "Warsaw", 
+#     "Vienna",
+#     "Copenhagen", 
+#     "Belgrade", 
+#     "Istanbul"
+# ]  
+# days_per_city = [0, 2, 3, 1, 1, 2, 1, 1, 2, 0]  # Must match length of selected_cities + 1 for return
+# time_weight = 100
+start_date = "2026-05-11"
+
+selected_cities = ["London", "Paris", "Amsterdam", "Berlin", "Prague", "Vienna", "Budapest"]
+days_per_city   = [0,              1,            1,       1,         1,        2,         1]
+time_weight = 1
+
+# 1. Run TSP to get optimal route (with city filter)
+route_data = run_tsp(time_weight=time_weight, selected_cities=selected_cities)
+
+# 2. Schedule with dates
+itinerary = schedule_itinerary(
+    start_date,
+    route_data['cities'],
+    route_data['iata_codes'],
+    route_data['modes'],
+    days_per_city
+)
+
+print(itinerary)
+# 3. Get bookable flights
+bookable = get_bookable_itinerary(itinerary, route_data['train_corridors'])
+bookable_filename = f'{uuid.uuid4()}'
+with open(f'itineraries/{bookable_filename}.json', 'w') as f:
+    json.dump(bookable, f, indent=2)
+
+# 4. Format and display
+print_pretty_itinerary(f'itineraries/{bookable_filename}.json')
