@@ -49,7 +49,6 @@ def create_data_model(time_weight_arg, selected_cities=None):
                 weight = fare + (time_weight * travel_time)
                 mode = "train"
             else:
-                # Default to flight
                 fare = cost_matrix[i][j]
                 travel_time = time_matrix[i][j]
                 weight = fare + (time_weight * travel_time)
@@ -58,7 +57,7 @@ def create_data_model(time_weight_arg, selected_cities=None):
             if math.isinf(weight):
                 weight = 10**9
 
-            row.append(int(weight))  # OR-Tools requires integers
+            row.append(int(weight))
             mode_row.append(mode)
         distance_matrix.append(row)
         mode_matrix.append(mode_row)
@@ -84,7 +83,7 @@ def print_solution(manager, routing, solution, data):
     route_cost = 0
     route_time = 0
     route = []
-    route_modes = []  # <-- add mode list
+    route_modes = []
 
     while not routing.IsEnd(index):
         city_index = manager.IndexToNode(index)
@@ -96,7 +95,7 @@ def print_solution(manager, routing, solution, data):
         to_idx = manager.IndexToNode(index)
 
         mode = mode_matrix[from_idx][to_idx]
-        route_modes.append(mode)  # <-- store mode for this leg
+        route_modes.append(mode)
 
         if mode == "train":
             corridor = train_corridors.get((cities[from_idx], cities[to_idx])) \
@@ -118,7 +117,6 @@ def print_solution(manager, routing, solution, data):
     print(f'Total time: {route_time:.2f} hours')
     print(f'Route order: {" → ".join(route)}')
 
-    # Return route data including modes
     route_cities = route[:]
     route_iata = [data['iata_codes'][city] for city in route_cities]
 

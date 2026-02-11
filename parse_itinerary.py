@@ -58,5 +58,3 @@ def print_pretty_itinerary(itinerary_json: str):
 
 		print(f'Cost: £{price:.2f}')
 		print('\n')
-
-# print_pretty_itinerary('bookable_itinerary.json')

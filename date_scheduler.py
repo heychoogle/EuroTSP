@@ -46,7 +46,6 @@ def get_bookable_itinerary(itinerary_dict, train_corridors):
     """
     Returns bookable details per leg.
     Uses train corridor data if leg is a train, otherwise fetches flight details.
-    Ensures uniform keys for printing: 'price', 'duration', 'date', 'segments'.
     """
     from api_helper import get_flight_details
     
@@ -55,7 +54,7 @@ def get_bookable_itinerary(itinerary_dict, train_corridors):
     for leg_id, leg_data in itinerary_dict.items():
         origin = leg_data['origin_iata']
         dest = leg_data['dest_iata']
-        date = leg_data['departure_date']  # Will rename to 'date' in output
+        date = leg_data['departure_date'] 
         mode = leg_data['mode']
         
         if mode == "train":
@@ -66,15 +65,15 @@ def get_bookable_itinerary(itinerary_dict, train_corridors):
             bookable_legs[leg_id] = {
                 'origin': origin,
                 'dest': dest,
-                'date': date,           # uniform key
+                'date': date,          
                 'mode': 'train',
-                'price': price,         # uniform key
-                'duration': duration,   # uniform key
+                'price': price,         
+                'duration': duration,   
                 'segments': [{
                     "from": origin,
                     "to": dest,
                     "departure": date,
-                    "arrival": date  # could adjust if you want real arrival time
+                    "arrival": date 
                 }]
             }
             print(f"Train leg: {origin} → {dest}, cost £{price:.2f}, time {duration:.2f}h")
@@ -86,7 +85,7 @@ def get_bookable_itinerary(itinerary_dict, train_corridors):
                 bookable_legs[leg_id] = {
                     'origin': origin,
                     'dest': dest,
-                    'date': date,            # uniform key
+                    'date': date,            
                     'mode': 'flight',
                     'price': flight_details.get('price', 0),
                     'duration': flight_details.get('duration', 0),
