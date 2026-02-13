@@ -1,3 +1,7 @@
+**NOTE:** Effective July 17th 2026, Amadeus (the only free flight pricing API with a generous request allowance) will shut down their self-service APIs. The enterprise plans still come with 2000 free requests, and aren't proibitively expensive assuming you (like EuroTSP will/does) opt to cache results for a likely safe amount of time such that they will still remain accurate (a cache TTL logarithmically scaled to how far out a flight is) when retrieved from the cache.
+
+---
+
 # EuroTSP
 
 EuroTSP is a multi-modal European route optimization engine designed to compute the most cost-effective and/or time-efficient travel sequence across multiple cities, weighted based on cost/time preference. The system combines flights and train data and leverages TSP-based constraint solving (via Google OR Tools) to generate structured, bookable itineraries from heterogeneous datasets.
@@ -155,6 +159,7 @@ EuroTSP is a multi-modal European route optimization engine designed to compute 
 - Worldwide functionality
    - Theoretically, this will work right now - but computing a matrix for 19 destinations is already a large amount of our free Amadeus API quota and we can't really go much higher.
 - New Flight API integrations
-   - Amadeus shuts down in July 2026 for free consumers; a new API will definitely need to be found.
+   - Amadeus shuts down self-service in July 2026. Enterprise still comes with a 2000 free allowance but incur a €0.025 charge per API call.
+- It could be very worth storing historical flight matrices and training a regression model to predict future prices given variables (i.e. season, day of the week, etc.).
 
 ---

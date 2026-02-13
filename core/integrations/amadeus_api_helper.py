@@ -72,6 +72,15 @@ def get_flight_details(origin_iata: str, dest_iata: str, departure_date: str, ma
 
 def _fetch_flight(origin_iata: str, dest_iata: str, departure_date: str, non_stop: bool, max_retries: int = MAX_RETRIES):
 	"""Internal helper to fetch flight with or without nonStop parameter"""
+	
+	# FUTURE CACHING LAYER PLANS:
+	# hit cache layer with hashed details first
+	# hashed_flight = caching_layer.hash(origin_iata, dest_iata, departure_date, non_stop)
+	# flight_details = caching_layer.get(hashed_flight)
+	# if flight_details return flight_details else hit API
+	# caching_layer.set(hash, flight_details, ttl=86400)
+	# return flight_details
+
 	non_stop_param = "&nonStop=true" if non_stop else ""
 	url = f'https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode={origin_iata}&destinationLocationCode={dest_iata}&departureDate={departure_date}&adults=1&max=1&currencyCode=GBP{non_stop_param}'
 
