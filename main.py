@@ -2,6 +2,7 @@ from core.route_optimiser.tsp import main as run_tsp
 from core.itinerary_handler.schedule import schedule_itinerary
 from core.itinerary_handler.bookable import get_bookable_itinerary
 from core.fs.save_itinerary import save_itinerary_json, save_pretty_itinerary
+from core.fs.fetch_itinerary import fetch_itinerary
 from core.config.models import ItineraryRequest
 
 from fastapi import FastAPI, HTTPException
@@ -9,7 +10,7 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
 @app.post("/calculate_itinerary")
-async def calculate_itinerary(itinerary_request: ItineraryRequest) -> dict:
+def calculate_itinerary(itinerary_request: ItineraryRequest) -> dict:
     selected_cities = itinerary_request.selected_cities
     days_per_city = itinerary_request.days_per_city
     time_weight = itinerary_request.time_weight
@@ -44,3 +45,14 @@ async def calculate_itinerary(itinerary_request: ItineraryRequest) -> dict:
     # # Format and display
     # print_pretty_itinerary(bookable_json)
     
+@app.get("/itinerary/{itinerary_id}")
+def get_itinerary(itinerary_id: str) -> dict:
+    itinerary_json = fetch_itinerary(itinerary_id)
+
+    if not itinerary_json:
+        raise HTTPException(
+            status_code=404,
+            detail=f'Itinerary with id:{itinerary_id} not found'
+        )
+
+    return itinerary_json
