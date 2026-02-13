@@ -7,8 +7,7 @@ def schedule_itinerary(start_date, optimal_city_route, optimal_city_route_iata, 
     """
     itinerary_dict = {}
 
-    departure_datetime = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    departure_date = departure_datetime.date()
+    departure_date = start_date
 
     n = len(optimal_city_route)
 

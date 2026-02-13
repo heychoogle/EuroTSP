@@ -74,7 +74,7 @@ def create_data_model(time_weight_arg, selected_cities=None):
 
 def print_solution(manager, routing, solution, data):
     """Prints solution on console with correct train/flight costs and returns route data including modes."""
-    print('\n=== OPTIMAL ROUTE ===')
+    #print('\n=== OPTIMAL ROUTE ===')
     index = routing.Start(0)
     cities = data['cities']
     distance_matrix = data['distance_matrix']
@@ -112,8 +112,8 @@ def print_solution(manager, routing, solution, data):
 
         route_cost += fare
         route_time += travel_time
-        print(f'{cities[from_idx]} -> {cities[to_idx]} via {mode}, cost £{fare:.2f}, time {travel_time:.2f}h')
-    print('=====================')
+        #print(f'{cities[from_idx]} -> {cities[to_idx]} via {mode}, cost £{fare:.2f}, time {travel_time:.2f}h')
+    #print('=====================')
 
     # append return to depot to route
     final_city_index = manager.IndexToNode(index)
@@ -173,7 +173,7 @@ def main(time_weight, selected_cities):
 
     # Print solution on console.
     if solution:
-        route_data = print_solution(manager, routing, solution, data)#
+        route_data = print_solution(manager, routing, solution, data)
         return route_data
     else:
         print('No solution found!')

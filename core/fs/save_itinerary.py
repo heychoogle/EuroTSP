@@ -9,7 +9,7 @@ from core.itinerary_handler.parse import print_pretty_itinerary
 
 output_dir = Path(__file__).resolve().parents[2] / "output" / "itineraries"
 
-def save_itinerary_json(itinerary: dict):
+def save_itinerary_json(itinerary: dict) -> str:
 	
 	unique_id = f'{uuid4()}'[:8]
 	filename = f'bookable_itinerary_{unique_id}.json'
@@ -25,7 +25,7 @@ def save_itinerary_json(itinerary: dict):
 
 	return f'{itinerary_filepath}/{filename}'
 
-def save_pretty_itinerary(itinerary_json_file: str):
+def save_pretty_itinerary(itinerary_json_file: str) -> str:
 
     itinerary_json_file = Path(itinerary_json_file)
 

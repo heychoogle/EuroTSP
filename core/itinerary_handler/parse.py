@@ -1,7 +1,7 @@
 import json
 from datetime import date, datetime
 
-def print_pretty_itinerary(itinerary_json: str):
+def print_pretty_itinerary(itinerary_json: str) -> None:
 	with open(itinerary_json, 'r') as f:
 		bookable_itinerary = json.load(f)
 

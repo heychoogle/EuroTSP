@@ -1,6 +1,6 @@
 from core.integrations.amadeus_api_helper import get_flight_details
 
-def get_bookable_itinerary(itinerary_dict, train_corridors):
+def get_bookable_itinerary(itinerary_dict, train_corridors) -> dict:
     """
     Returns bookable details per leg.
     Uses train corridor data if leg is a train, otherwise fetches flight details.

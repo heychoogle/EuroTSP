@@ -19,13 +19,13 @@ def load_cached_matrix(cache_file='flight_matrix_cache.json', max_age_days=365):
     print(f"Using cached matrix from {cache['timestamp']}")
     return cache
 
-def save_matrix_cache(matrix_data, cache_file='flight_matrix_cache.json'):
+def save_matrix_cache(matrix_data, cache_file='flight_matrix_cache.json') -> None:
     """Save matrix data to cache file"""
     with open(cache_file, 'w') as f:
         json.dump(matrix_data, f, indent=2)
     print(f"Matrix cached to {cache_file}")
 
-def filter_matrix_by_cities(full_matrix_data, selected_cities):
+def filter_matrix_by_cities(full_matrix_data, selected_cities) -> dict:
     """
     Extract a submatrix containing only the selected cities.
     
