@@ -7,16 +7,18 @@ def print_pretty_itinerary(itinerary_json: str):
 
 	print('\n')
 
-	total_cost = sum([bookable_itinerary[leg]["price"] for leg in bookable_itinerary])
+	metadata = bookable_itinerary['metadata']
+
+	total_cost = metadata['total_cost']
 	print(f'Total Cost: £{total_cost:.2f}')
 
-	total_time = sum([bookable_itinerary[leg]["duration"] for leg in bookable_itinerary])
+	total_time = metadata['total_duration']
 	total_time_hours = total_time // 1
 	total_time_minutes = (total_time - total_time_hours) * 60
 	print(f'Total Travel Time: {total_time_hours:.0f}h {total_time_minutes:.0f}m')
 
-	start_date = [bookable_itinerary[leg]["date"] for leg in bookable_itinerary][0]
-	end_date =	 [bookable_itinerary[leg]["date"] for leg in bookable_itinerary][-1]
+	start_date = metadata['start_date']
+	end_date =	 metadata['end_date']
 	duration = (
 		(datetime.strptime(end_date, "%Y-%m-%d").date()) 
 		- 
@@ -26,8 +28,10 @@ def print_pretty_itinerary(itinerary_json: str):
 
 	print('-----')
 
-	for leg in bookable_itinerary:
-		cur_leg = bookable_itinerary[leg]
+	bookable_legs = bookable_itinerary['bookable_legs']
+
+	for leg in bookable_legs:
+		cur_leg = bookable_legs[leg]
 		dest = cur_leg['dest']
 		segments = cur_leg['segments']
 

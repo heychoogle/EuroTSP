@@ -1,6 +1,6 @@
 import requests
 import re
-from config import AMADEUS_API_KEY, AMADEUS_API_SECRET
+from core.config.config import AMADEUS_API_KEY, AMADEUS_API_SECRET
 import numpy as np
 import time
 from datetime import datetime, timedelta

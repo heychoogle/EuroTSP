@@ -1,7 +1,7 @@
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from matrix_utils import load_cached_matrix, save_matrix_cache, filter_matrix_by_cities
-from api_helper import create_matrix
+from core.matrix_handler.matrix_utils import load_cached_matrix, save_matrix_cache, filter_matrix_by_cities
+from core.integrations.amadeus_api_helper import create_matrix
 import math
 
 def create_data_model(time_weight_arg, selected_cities=None):
@@ -9,6 +9,7 @@ def create_data_model(time_weight_arg, selected_cities=None):
     matrix_data = load_cached_matrix()
 
     if matrix_data is None:
+        print('Flight matrix not found, rebuilding...')
         # Cache miss or stale, rebuild
         matrix_data = create_matrix("2026-05-12")
         save_matrix_cache(matrix_data)
@@ -112,10 +113,15 @@ def print_solution(manager, routing, solution, data):
         route_cost += fare
         route_time += travel_time
         print(f'{cities[from_idx]} -> {cities[to_idx]} via {mode}, cost £{fare:.2f}, time {travel_time:.2f}h')
+    print('=====================')
+
+    # append return to depot to route
+    final_city_index = manager.IndexToNode(index)
+    route.append(cities[final_city_index])
 
     print(f'\nTotal cost: £{route_cost:.2f}')
     print(f'Total time: {route_time:.2f} hours')
-    print(f'Route order: {" → ".join(route)}')
+    print(f'Route order: {" → ".join(route)}\n')
 
     route_cities = route[:]
     route_iata = [data['iata_codes'][city] for city in route_cities]
