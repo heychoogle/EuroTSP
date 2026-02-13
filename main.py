@@ -37,7 +37,7 @@ def calculate_itinerary(itinerary_request: ItineraryRequest) -> dict:
     )
 
     # Get bookable flights
-    bookable = get_bookable_itinerary(itinerary, route_data['train_corridors'])
+    bookable = get_bookable_itinerary(itinerary, route_data['surface_corridors'])
     bookable_json = save_itinerary_json(bookable)
     save_pretty_itinerary(bookable_json)
 

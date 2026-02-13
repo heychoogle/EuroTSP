@@ -57,3 +57,27 @@ def filter_matrix_by_cities(full_matrix_data, selected_cities) -> dict:
         'timestamp': full_matrix_data['timestamp'],
         'reference_date': full_matrix_data['reference_date']
     }
+
+# eventually we will move this to its own JSON file
+def load_surface_corridors() -> dict:
+    surface_corridors = {
+        ("London", "Paris"):        {"fare": (50, 80),      "time": (4, 5),     "mode": "train"},
+        ("London", "Amsterdam"):    {"fare": (70, 100),     "time": (4, 5.5),   "mode": "train"},
+        ("Paris", "Amsterdam"):     {"fare": (30, 50),      "time": (3.5, 3.5), "mode": "train"},
+        ("Paris", "Barcelona"):     {"fare": (100, 130),    "time": (7, 8),     "mode": "train"},
+        ("Berlin", "Prague"):       {"fare": (20, 40),      "time": (4, 5.5),   "mode": "train"},
+        ("Berlin", "Warsaw"):       {"fare": (30, 40),      "time": (5, 5.4),   "mode": "train"},
+        ("Berlin", "Copenhagen"):   {"fare": (40, 60),      "time": (7, 8.5),   "mode": "train"},
+        ("Vienna", "Budapest"):     {"fare": (10, 20),      "time": (2, 3),     "mode": "train"},
+        ("Vienna", "Prague"):       {"fare": (15, 25),      "time": (4, 4.5),   "mode": "train"},
+        ("Vienna", "Zagreb"):       {"fare": (20, 25),      "time": (5, 6),     "mode": "coach"},
+        ("Belgrade", "Budapest"):   {"fare": (20, 25),      "time": (6, 6),     "mode": "coach"},
+        ("Sofia", "Bucharest"):     {"fare": (10, 20),      "time": (6.5, 7),   "mode": "coach"},
+        ("Sofia", "Athens"):        {"fare": (50, 60),      "time": (11, 12),   "mode": "coach"},
+        ("Istanbul", "Sofia"):      {"fare": (30, 40),      "time": (8, 10),    "mode": "coach"},
+        ("Istanbul", "Bucharest"):  {"fare": (35, 45),      "time": (11, 11.5), "mode": "coach"},
+        ("Zagreb", "Budapest"):     {"fare": (15, 25),      "time": (4, 5),     "mode": "coach"},
+        ("Zagreb", "Belgrade"):     {"fare": (15, 25),      "time": (5, 6),     "mode": "coach"},
+        ("Prague", "Warsaw"):       {"fare": (15, 25),      "time": (8, 10),    "mode": "coach"}
+    }
+    return surface_corridors

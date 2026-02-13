@@ -1,6 +1,6 @@
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from core.matrix_handler.matrix_utils import load_cached_matrix, save_matrix_cache, filter_matrix_by_cities
+from core.matrix_handler.matrix_utils import load_cached_matrix, save_matrix_cache, filter_matrix_by_cities, load_surface_corridors
 from core.integrations.amadeus_api_helper import create_matrix
 import math
 
@@ -22,14 +22,8 @@ def create_data_model(time_weight_arg, selected_cities=None):
     time_matrix = matrix_data['time_matrix']
     cities = matrix_data['cities']
 
-    # Train corridor dictionary with realistic fares/times
-    train_corridors = {
-        ("London", "Paris"): {"fare": (50, 80), "time": (2.5, 2.75)},
-        ("Paris", "Amsterdam"): {"fare": (30, 50), "time": (3.5, 3.5)},
-        ("Berlin", "Prague"): {"fare": (20, 40), "time": (4, 5)},
-        ("Vienna", "Budapest"): {"fare": (10, 20), "time": (2, 3)},
-        ("Prague", "Vienna"): {"fare": (15, 25), "time": (4, 4.5)}
-    }
+    # Surface travel corridor dictionary with realistic fares/times (No API for these)
+    surface_corridors = load_surface_corridors()
 
     # Combined weight: cost + (time_weight * time)
     time_weight = time_weight_arg
@@ -43,12 +37,16 @@ def create_data_model(time_weight_arg, selected_cities=None):
             if i == j:
                 weight = 0
                 mode = None
-            elif (origin, dest) in train_corridors or (dest, origin) in train_corridors:
-                corridor = train_corridors.get((origin, dest)) or train_corridors.get((dest, origin))
+
+            corridor = surface_corridors.get( (origin, dest) )
+            if corridor is None:
+                corridor = surface_corridors.get( (dest, origin) )
+            if corridor is not None:
                 fare = sum(corridor["fare"]) / 2
                 travel_time = sum(corridor["time"]) / 2
                 weight = fare + (time_weight * travel_time)
-                mode = "train"
+                mode = corridor["mode"]
+
             else:
                 fare = cost_matrix[i][j]
                 travel_time = time_matrix[i][j]
@@ -65,7 +63,7 @@ def create_data_model(time_weight_arg, selected_cities=None):
 
     matrix_data['distance_matrix'] = distance_matrix
     matrix_data['mode_matrix'] = mode_matrix
-    matrix_data['train_corridors'] = train_corridors  # for printing costs/times
+    matrix_data['surface_corridors'] = surface_corridors  # for printing costs/times
     matrix_data['num_vehicles'] = 1
     matrix_data['depot'] = 0
 
@@ -77,9 +75,8 @@ def print_solution(manager, routing, solution, data):
     #print('\n=== OPTIMAL ROUTE ===')
     index = routing.Start(0)
     cities = data['cities']
-    distance_matrix = data['distance_matrix']
     mode_matrix = data['mode_matrix']
-    train_corridors = data.get('train_corridors', {})
+    surface_corridors = data.get('surface_corridors', {})
 
     route_cost = 0
     route_time = 0
@@ -98,9 +95,9 @@ def print_solution(manager, routing, solution, data):
         mode = mode_matrix[from_idx][to_idx]
         route_modes.append(mode)
 
-        if mode == "train":
-            corridor = train_corridors.get((cities[from_idx], cities[to_idx])) \
-                       or train_corridors.get((cities[to_idx], cities[from_idx]))
+        if mode != "flight":
+            corridor = surface_corridors.get((cities[from_idx], cities[to_idx])) \
+                       or surface_corridors.get((cities[to_idx], cities[from_idx]))
             fare = sum(corridor["fare"]) / 2
             travel_time = sum(corridor["time"]) / 2
         elif mode == "flight":
@@ -132,7 +129,7 @@ def print_solution(manager, routing, solution, data):
         'modes': route_modes,
         'total_cost': route_cost,
         'total_time': route_time,
-        'train_corridors': train_corridors
+        'surface_corridors': surface_corridors
     }
 
 

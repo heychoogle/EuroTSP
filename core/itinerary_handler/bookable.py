@@ -1,6 +1,6 @@
 from core.integrations.amadeus_api_helper import get_flight_details
 
-def get_bookable_itinerary(itinerary_dict, train_corridors) -> dict:
+def get_bookable_itinerary(itinerary_dict, surface_corridors) -> dict:
     """
     Returns bookable details per leg.
     Uses train corridor data if leg is a train, otherwise fetches flight details.
@@ -14,16 +14,16 @@ def get_bookable_itinerary(itinerary_dict, train_corridors) -> dict:
         date = leg_data['departure_date'] 
         mode = leg_data['mode']
         
-        if mode == "train":
-            corridor = train_corridors.get((leg_data['origin_city'], leg_data['dest_city'])) \
-                       or train_corridors.get((leg_data['dest_city'], leg_data['origin_city']))
+        if mode != "flight":
+            corridor = surface_corridors.get((leg_data['origin_city'], leg_data['dest_city'])) \
+                       or surface_corridors.get((leg_data['dest_city'], leg_data['origin_city']))
             price = sum(corridor["fare"]) / 2
             duration = sum(corridor["time"]) / 2
             bookable_legs[leg_id] = {
                 'origin': origin,
                 'dest': dest,
                 'date': date,          
-                'mode': 'train',
+                'mode': mode,
                 'price': price,         
                 'duration': duration,   
                 'segments': [{
@@ -33,7 +33,7 @@ def get_bookable_itinerary(itinerary_dict, train_corridors) -> dict:
                     "arrival": date 
                 }]
             }
-            print(f"Train leg: {origin} → {dest}, cost £{price:.2f}, time {duration:.2f}h")
+            print(f"{mode.title()} leg: {origin} → {dest}, cost £{price:.2f}, time {duration:.2f}h")
         else:
             # Flight leg
             print(f"\nFetching flights for {origin} → {dest} on {date}...")

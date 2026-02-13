@@ -48,6 +48,8 @@ def print_pretty_itinerary(itinerary_json: str) -> None:
 		mode = cur_leg.get("mode", "flight")  # fallback to flight if missing
 		if mode == "train":
 			mode_label = "Train"
+		if mode == "coach":
+			mode_label = "Coach"
 		elif mode == "flight":
 			mode_label = "Direct Flight" if len(segments) == 1 else f"{len(segments)} Flights"
 		else:
