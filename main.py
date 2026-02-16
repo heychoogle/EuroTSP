@@ -33,7 +33,8 @@ def calculate_itinerary(itinerary_request: ItineraryRequest) -> dict:
         route_data['cities'],
         route_data['iata_codes'],
         route_data['modes'],
-        days_per_city
+        days_per_city,
+        selected_cities
     )
 
     # Get bookable flights
